@@ -37,11 +37,15 @@ class _PhotoScreenState extends State<PhotoScreen> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newPage = await getData(pageKey, searchTerm);
+      final List<UnsplashResults> newPage = await getData(pageKey, searchTerm);
 
       final nextPageKey = pageKey + 1;
 
-      _pagingController.appendPage(newPage, nextPageKey);
+      if (newPage.length == 0) {
+        _pagingController.appendLastPage(newPage);
+      } else {
+        _pagingController.appendPage(newPage, nextPageKey);
+      }
     } catch (error) {
       _pagingController.error = error;
     }
